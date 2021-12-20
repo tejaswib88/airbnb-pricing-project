@@ -83,4 +83,3 @@ listings = listings %>% drop_na()
 write_csv(x = listings, file = "data/clean/cleaned_listings.csv")
 
 
-
