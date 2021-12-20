@@ -1,5 +1,5 @@
 ---
-title: 'Final Report'
+title: 'Modelling Airbnb Prices'
 author: 'Tejaswi Bhavaraju, Akshat Talreja'
 date: 'Dec 19, 2021'
 output:
@@ -27,7 +27,7 @@ data = read.csv("../data/clean/cleaned_listings.csv")
 \bigskip
 
 The code to reproduce this report is available [on Github](
-# INSERT GITHUB CODE
+https://github.com/tejaswib88/airbnb-pricing-project
 ).
 
 \newpage
@@ -64,7 +64,7 @@ We started with removing some unnecessary columns that were in the raw dataset. 
 The cleaned dataset had 1,882 entries which each represent a unique listing on Airbnb within Asheville. Each entry shows a specific listing. For each listing, there are a total of 35 features including room types, host status, reviews, among others. A detailed description of these variables can be found within the Appendix
 
 ### Response Variable
-The response variable is the Price of the Airbnb listing, which is a continuous variable. In studying the distribution of the response variable “Price”, the price is right skewed which reflects the fact that there are several listings which are priced over $250 even though the median is $150. There is a long tail to the right reflecting outlier listings with extremely high pricing, which makes it interesting to predict potential factors that enable high pricing. The histogram below further shows this distribution
+The response variable is the Price of the Airbnb listing, which is a continuous variable. In studying the distribution of the response variable “Price”, the price is right skewed which reflects the fact that there are several listings which are priced over $250 even though the median is $150. There is a long tail to the right reflecting outlier listings with extremely high pricing, which makes it interesting to predict potential factors that enable high pricing. This distribution can be seen in Figure \@ref(fig:price-plot)
 
 ```{r price-plot, fig.cap = "Distribution of prices", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/price-histogram.png")
@@ -77,9 +77,9 @@ We used an 80-20 split for this project such that 80% of the 1,882 clean entries
 
 ### Response
 
-Considering the Top 10 listings by Price, it can be seen that the hosts for these listings operate at top quality standards. All hosts of the 10 most expensive Airbnb listings respond to every message within an hour and 9 out of them are superhosts.
+Considering the Top 10 listings by Price seen in Table \@ref(tab:top-tab), it can be seen that the hosts for these listings operate at top quality standards. All hosts of the 10 most expensive Airbnb listings respond to every message within an hour and 9 out of them are superhosts.
 
-```{r, echo = FALSE}
+```{r top-tab, echo = FALSE}
 top_10_prices = read.csv("../results/top-10-prices.csv")
 top_10_prices %>% kable(format = "latex", row.names = NA, 
         booktabs = TRUE, digits = 2, 
@@ -92,7 +92,7 @@ top_10_prices %>% kable(format = "latex", row.names = NA,
 
 #### Correlation Map of All Variables 
 
-To begin with, we analysed the correlation between our numeric explanatory features to better understand their relationships with each other. This can be seen in Figure <>
+To begin with, we analysed the correlation between our numeric explanatory features to better understand their relationships with each other. This can be seen in Figure \@ref(fig:corr-plot)
 
 ```{r corr-plot, fig.cap = "Correlation between explanatory features", fig.align = "center", fig.height = 10, fig.width = 10, echo = FALSE}
 numeric = data %>% select(-price)
@@ -111,7 +111,7 @@ In addition to the above, we analysed the relationship between price and some ke
 
 **Price by Room Type** 
 
-We created a boxplot graphic to study the relationship between the type of the room within the listing (Entire home, Hotel Room, Private Room, and Shared Room). As we expected, hotel rooms were the most expensive kind of listing in distribution. While entire homes or apartments were second in terms of pricing, they had a large number of outliers which had rent upwards of $500. On the other hand, private or shared rooms tend to have lower prices.
+We created a boxplot graphic to study the relationship between the type of the room within the listing (Entire home, Hotel Room, Private Room, and Shared Room). As we expected, hotel rooms were the most expensive kind of listing in distribution. While entire homes or apartments were second in terms of pricing, they had a large number of outliers which had rent upwards of $500. On the other hand, private or shared rooms tend to have lower prices. This can be seen in Figure \@ref(fig:room-plot).
 
 ```{r room-plot, fig.cap = "Prices by Room Type", fig.align = "center", out.height = "40%", out.weight = "40%", echo = FALSE}
 knitr::include_graphics("../results/price-room-type.png")
@@ -120,7 +120,7 @@ knitr::include_graphics("../results/price-room-type.png")
 \newpage
 **Price and Number of Reviews**
 
-A key feature which belongs to the category of reviews was the number of total reviews provided on a listing. Our initial understanding was that a listing which has high reviews would transfer its popularity in its pricing. However, as the scatterplot shows, generally, at high number of reviews, the listings tended to have lower price. This is an interesting revelation and a potential reason for this could be that the clientele for lower priced listings is more likely to be supportive of their hosts, among others
+A key feature which belongs to the category of reviews was the number of total reviews provided on a listing. Our initial understanding was that a listing which has high reviews would transfer its popularity in its pricing. However, as the scatterplot shows, generally, at high number of reviews, the listings tended to have lower price. This is an interesting revelation and a potential reason for this could be that the clientele for lower priced listings is more likely to be supportive of their hosts, among others. This can be seen in Figure \@ref(fig:reviews-plot)
 
 ```{r reviews-plot, fig.cap = "Number of reviews and prices", fig.align = "center", echo = FALSE, out.height="80%", out.width="80%"}
 knitr::include_graphics("../results/price-num-reviews.png")
@@ -129,7 +129,7 @@ knitr::include_graphics("../results/price-num-reviews.png")
 \newpage
 **Price and Superhost Status**
 
-We also wanted to test whether most listings which are created by superhosts are priced higher than otherwise. However, we found that the median price of a listing for superhosts is the same as those listings whose hosts are not superhosts. An additional aspect to note though is that superhosts had much more outliers in terms of listings whose prices are considerably higher than the median. 
+We also wanted to test whether most listings which are created by superhosts are priced higher than otherwise. However, we found that the median price of a listing for superhosts is the same as those listings whose hosts are not superhosts. An additional aspect to note though is that superhosts had much more outliers in terms of listings whose prices are considerably higher than the median. This can be seen in Figure \@ref(fig:superhost-plot)
 
 ```{r superhost-plot, fig.cap = "Superhost status and prices", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/price-superhost.png")
@@ -138,7 +138,7 @@ knitr::include_graphics("../results/price-superhost.png")
 \newpage
 **Price & Verification**
 
-Additionally, we analysed how a host's identity being verified can influence prices. Based on the plot below, we see that while listings with verified host identidities have a higher median price, the difference is likely minimal and both have outliers tending to higher prices. This was an interesting finding especially considering our hypothesis that verification would result in a boost in prices due to higher credibility in the hands of a verified host. 
+Additionally, we analysed how a host's identity being verified can influence prices. Based on the plot below, we see that while listings with verified host identidities have a higher median price, the difference is likely minimal and both have outliers tending to higher prices. This was an interesting finding especially considering our hypothesis that verification would result in a boost in prices due to higher credibility in the hands of a verified host. This can be seen in Figure \@ref(fig:verification-plot).
 
 ```{r verification-plot, fig.cap = "Host verification and prices", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/price-verified.png")
@@ -147,7 +147,7 @@ knitr::include_graphics("../results/price-verified.png")
 \newpage
 **Price & Time taken by host to respond**
 
-We further analysed how a host's response time affects price. As was our hypothesis, we see that quicker responses yield a higher median price, and furthermore, listings with a host that responds quicker have more outliers tending to higher prices, which indicates that being responsive can be a way to boost value of a property. What is interesting is that the jump in median prices prices between hosts that respond within a few days and more andd those that respond within a day is much higher compared to subsequent jumps, indicating that taking more than a day in responding can be especially disadvantageous.
+We further analysed how a host's response time affects price. As was our hypothesis, we see that quicker responses yield a higher median price, and furthermore, listings with a host that responds quicker have more outliers tending to higher prices, which indicates that being responsive can be a way to boost value of a property. What is interesting is that the jump in median prices prices between hosts that respond within a few days and more andd those that respond within a day is much higher compared to subsequent jumps, indicating that taking more than a day in responding can be especially disadvantageous. This can be seen in Figure \@ref(fig:response-plot).
 
 ```{r response-plot, fig.cap = "Host response time and prices", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/price-response.png")
@@ -169,7 +169,7 @@ The multiple least squares further indicated that the variables captured 67.3% o
 
 While ordinary least squares worked fairly well, we further decided to experiment with penalized regression models since ordinary least squares models might suffer from overfitting and high variance, and regularization can allow us to get to a more robust model.
 
-To begin with, we ran a cross validated ridge regression model on the price against the 35 explanatory variables. The figure below showcases the top 10 features selected first by the ridge model. 
+To begin with, we ran a cross validated ridge regression model on the price against the 35 explanatory variables. Figure \@ref(fig:ridge-features) showcases the top 10 features selected first by the ridge model. 
 
 ```{r ridge-features, fig.cap = "Top features in ridge regression", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/ridge-features-plot.png")
@@ -177,13 +177,13 @@ knitr::include_graphics("../results/ridge-features-plot.png")
 
 \newpage
 
-Furthermore, we also implemented a cross validated lasso regression model. The model ended up selecting all features, potentially indicating that ridge regression might have been a better choice. Nevertheless, the first 10 features selected by the model were: 
+Furthermore, we also implemented a cross validated lasso regression model. The model ended up selecting all features, potentially indicating that ridge regression might have been a better choice. Nevertheless, the first 10 features selected by the model can be seen in Figure \@ref(fig:lasso-features-plot) 
 
 ```{r lasso-features-plot, fig.cap = "Top features in lasso regression", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/lasso-features-plot.png")
 ```
 
-Furthermore, from the lasso model, we extracted the coefficients to analyse the top 10 contributing parameters within the cross validated model that contributed to price. This was done by selecting the top 10 features based on the highest absolute coefficient values. These are demonstrated in the table below. 
+Furthermore, from the lasso model, we extracted the coefficients to analyse the top 10 contributing parameters within the cross validated model that contributed to price. This was done by selecting the top 10 features based on the highest absolute coefficient values. These are demonstrated in Table \@ref(tab:lasso-coefficients). 
 
 ```{r lasso-coefficients, message = FALSE, echo = FALSE}
 read.csv("../results/top10_features.csv") %>%
@@ -196,34 +196,39 @@ read.csv("../results/top10_features.csv") %>%
 ```
 
 Based on the above table, we see the top 20 most contributing features within the lasso model. What is interesting is that the review score for value has a negative coefficient, which seems to be contradictory to what one might imagine considering that higher review scores should increase value. Among the other features, perhaps the most actionable one is review scores for cleanliness, which has a high positive coefficient indicating that cleanliness is important sometimes even more so than the location review. Another actionable feature here is the number of verifications.
+
 \newpage
+
 ## Tree-based methods
 
 ### Random forest
 
-Beyond regression models, we further experimented with tree based methodologies. In particular, we created a random forest model to predict price based on the aforementioned 35 features. When training the model, we further tuned the number of parameters considered at each split. We tried values ranging from 1 to 30, and the out-of-bag errors for each of these is demonstrated below
+Beyond regression models, we further experimented with tree based methodologies. In particular, we created a random forest model to predict price based on the aforementioned 35 features. When training the model, we further tuned the number of parameters considered at each split. We tried values ranging from 1 to 30, and the out-of-bag errors for each of these is demonstrated in Figure \@ref(fig:rf-tuning-plot)
 
 ```{r rf-tuning-plot, fig.cap = "OOB Errors and number of features at each split", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/rf-mtry-plot.png")
 ```
 
-We see above that the out of bag error is minimized when at 17 features for each split. We used this tuned value of the parameter to construct our final model. Based on this, we analysed the variable importance using both OOB and purity variable importance to better understand features that are strong predictors towards price. The results of this are demonstrated in below
+We see above that the out of bag error is minimized when at 17 features for each split. We used this tuned value of the parameter to construct our final model. Based on this, we analysed the variable importance using both OOB and purity variable importance to better understand features that are strong predictors towards price. The results of this are demonstrated in Figure \@ref(fig:var-imp-plot)
+
+\newpage
 
 ```{r var-imp-plot, fig.cap = "Random Forest Variable Importance", fig.align = "center", echo = FALSE, fig.height = 10, fig.width = 8}
 load("../results/rf_finalfit.Rda")
 varImpPlot(rf_finalfit)
 ```
-
+\newpage
 From the variable importances, we see that based on the left metric, actionable features include number of listings by host, review scores for location and value, number of verifications by the host, along with more obvious ones such as number of accomodates, etc. Based on the metric on the right hand side, actionable features deemed important were number of listings by host, number of days hosting, and review scores for value and location.
 
 Looking at each of the above models, we definitely see some commonalities, and overall a few actionable features that were deemed important, most notably number of listings by host, review scores for parameters like cleanliness and location, number of verifications, and being a superhost.
+
 \newpage
 
 # Conclusions
 
 ## Method comparison
 
-Overall, we experimented with 4 distinct modelling methodologies, namely OLS, ridge regression, lasso regression, and random forests. To analyse each of them, we considered the root mean squared errors by analysing their predictions on the test dataset. In addition to the above variables, we further included an intercept only model, which predicts the average price from the training dataset for each listing, as a benchmark to better understand the predictive potential of our models. The results of this investigation are summarized in the table below
+Overall, we experimented with 4 distinct modelling methodologies, namely OLS, ridge regression, lasso regression, and random forests. To analyse each of them, we considered the root mean squared errors by analysing their predictions on the test dataset. In addition to the above variables, we further included an intercept only model, which predicts the average price from the training dataset for each listing, as a benchmark to better understand the predictive potential of our models. The results of this investigation are summarized in Table \@ref(tab:model-evaluation)
 
 ```{r model-evaluation, message = FALSE, echo = FALSE}
 read.csv("../results/model-evaluation.csv") %>%
@@ -277,7 +282,7 @@ Below are the 35 features we used for analysis. Words written in parentheses rep
   - Host Listings Count (`host_total_listings_count`): The number of listings the host has (per Airbnb calculations)
   - Host Profile Pic Status (`host_has_profile_pic`): Boolean showing whether host has a profile picture or not.
   - Host Identity Verification Status (`host_identity_verified`): Boolean showing whether host's identity has been verified or not.
-  - Limited access to healthy foods (`num_verifications`): Number of different possible methods of verification for listing, such as email, telephone, etc
+  - Number of verifications (`num_verifications`): Number of different possible methods of verification for listing, such as email, telephone, etc
 
 **Room/Accomodation Features::**
 
@@ -310,9 +315,9 @@ number_of_reviews; number_of_reviews_ltm; number_of_reviews_l30d; review_scores_
   - Number of Reviews per month (`reviews_per_month`): The number of reviews the listing has over the lifetime of the listing.
 - *Review Qualitative Features* 
   - Average Review Rating (`review_scores_rating`): Average review rating given to a listing.
-  - Review Scores Accuracy (`review_scores_accuracy`): 
-  - Review Scores Cleanliness (`review_scores_cleanliness`): 
-  - Review Scores Checking (`review_scores_checkin`): 
-  - Review Scores Communication (`review_scores_communication`): 
-  - Review Scores Location (`review_scores_location`): 
-  - Review Scores Value (`review_scores_value`): 
+  - Review Scores Accuracy (`review_scores_accuracy`): Accuracy review scores
+  - Review Scores Cleanliness (`review_scores_cleanliness`): Cleanliness review scores
+  - Review Scores Checking (`review_scores_checkin`): Checking review scores
+  - Review Scores Communication (`review_scores_communication`): Communication review scores
+  - Review Scores Location (`review_scores_location`): Location review scores
+  - Review Scores Value (`review_scores_value`): Value review scores
