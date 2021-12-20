@@ -20,7 +20,7 @@ library(float)
 ```
 
 
-```{r}
+```{r, echo = FALSE}
 data = read.csv("../data/clean/cleaned_listings.csv")
 ```
 
@@ -34,16 +34,13 @@ The code to reproduce this report is available [on Github](
 
 # Executive Summary
 
-Problem
-
 **Problem.** While the general impact of Airbnb and its short-term rentals on residential communities is substantial,  the impact at the neighbourhood or city level can be seen to be much more varying. People belonging to and visiting a particular city have a unique combination of factors that affects their affinity for short term housigrng, which in turn determines the price of an Airbnb listing. And in certain cities such as Asheville (North Carolina), the state of short-term rentals is so crucial to tourism that studying their pricing can be very important. For our final project, we are looking at the Airbnb listing data of Asheville and studying the relationship between amenities, duration of stay, number of customers, several other factors, and the price of an Airbnb listing. Considering these factors, we hoped to extract a way of explaining and predicting the price of an Airbnb listing so that stakeholders could have a clear understanding of how pricing of Airbnbs in this particular community could be strategized.
 
 **Data.** We obtained data from the website of “Inside Airbnb”,  a mission driven activist project which aims to quantify the impact of short-term rentals on housing and residential communities. The dataset included the price of Airbnb listings and a number of features related to them such as room type, duration of stay, number of views of the listing, and several more. Our explanatory variables could be divided into three categories: host details (e.g. host response time, host acceptance rate) , room characteristics (e.g. room type, bathroom type), and reviews (review scores rating, number of reviews). As mentioned above, our primary response variable was the daily price in local currency (labelled as “price”).
 
 **Analysis** The main aim of our analysis is to better understand what listing attributes contribute to prices. After the cleaning process, we had 1,882 listings which we split into training and testing sets. Our exploratory data analysis studied the variation of our response variable and its relationship with features from the three main feature categories, namely host, room, and review related features. The main aim of our exploratory analysis was to uncover some preliminary trends on important attributes that can influence prices, and to get a better understanding of the distribution of our response variable, the price, and the correlation between different features. We further predicively modelled price using a range of statistical machine learning methodologies including Ordinary Least Squares, Ridge Regression, Lasso Regression, and Random Forest. For each model, we extracted important contributing features to better understand features that have predictive potential when it comes to prices. Lastly, we utilised these to come up with recommendations and takeaways for current and new airbnb hosts on pricing their properties and to potentially improve the value of their listings on the platform.
 
-# (Akshat) Conclusions paragraph 
-
+**Conclusions** Overall, from our analysis, we found that we can reasonably predict prices based on the given explanatory parameters. We further determined variables that were stronger predictors including number of accomodates, bathroom text, review scores, etc. Additionally, our analysis allowed us to extract certain strategies that can be followed by stakeholders to optimise the value of their lisitng such as motivating guests to review, in particular for parameters such as cleanliness and location, getting verified through multiple channels, and working towards becoming a superhost. Overall, we believe we were able to move closer to he goal of building a replicable model that hosts can make use of to understand their price/value of their listing, while uncovering interesting insights on how hosts can potentially boost the appeal of their listings.
 
 # Introduction
 
@@ -69,7 +66,7 @@ The cleaned dataset had 1,882 entries which each represent a unique listing on A
 ### Response Variable
 The response variable is the Price of the Airbnb listing, which is a continuous variable. In studying the distribution of the response variable “Price”, the price is right skewed which reflects the fact that there are several listings which are priced over $250 even though the median is $150. There is a long tail to the right reflecting outlier listings with extremely high pricing, which makes it interesting to predict potential factors that enable high pricing. The histogram below further shows this distribution
 
-```{r price-plot, fig.cap = "Distribution of prices", fig.align = "center", echo = FALSE, out.height = "50%", out.width = "50%"}
+```{r price-plot, fig.cap = "Distribution of prices", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/price-histogram.png")
 ```
 
@@ -88,9 +85,9 @@ top_10_prices %>% kable(format = "latex", row.names = NA,
         booktabs = TRUE, digits = 2, 
         col.names = c("Price", "Response Time", "Response Rate", "Is Host a Superhost?"),
         caption = "Top 10 Listings by Price") %>%
-  kable_styling(position = "center")
+  kable_styling(position = "center", latex_options = "hold_position")
 ```
-
+\newpage
 ### Features
 
 #### Correlation Map of All Variables 
@@ -103,6 +100,7 @@ numeric = numeric[, !sapply(numeric, is.character)]
 res = cor(numeric)
 corrplot(res)
 ```
+
 As we see, most features are not strongly correlated with each other, however, some clusters of features do showcase a positive relationship. For instance, we observe a positive correlation between number of people accomodated, number of bedrooms, and number of beds, which are features that are intuitively closely linked to one another. In addition, we see a close relationship between availabilities at different dates. Lastly, we also see positive correlations between different review scores, which we would once again expect. Here, we made a decision to leave all features within the explanatory set, however, another possible method would be to drop highly correlated features, which we can further experiment with in future iterations of this analysis.
 
 \newpage
@@ -161,7 +159,7 @@ knitr::include_graphics("../results/price-response.png")
 
 ### Ordinary least squares
 
-To begin our analysis, we ran an ordinary least squares regression on price against the 35 potentially explanatory variables. To understand drivers behind prices, we further studied the variables with a p-value lesser than a significance level of 0.05. The top 10 variables by significance were: 
+To begin our analysis, we ran an ordinary least squares regression on price against the 35 potentially explanatory variables. To understand drivers behind prices, we further studied the variables with a p-value lesser than a significance level of 0.05. Among these, we can specifically take a look at actionable features i.e. those that can be changed or optimized by the host. Actionable features that were deemed significant by the OLS model include being a superhost, number of listings, cleanliness review scores, and number of verifications.
 
 The multiple least squares further indicated that the variables captured 67.3% of the variation which, while not perfect, gives us a fairly solid proof of concept. Additionally, since our objective with this investigation is to yield factors contributing to a high price, we can sacrifice some levels of metric optimization for the purpose of explaining the impact of different listing attributes on price. 
 
@@ -171,7 +169,7 @@ The multiple least squares further indicated that the variables captured 67.3% o
 
 While ordinary least squares worked fairly well, we further decided to experiment with penalized regression models since ordinary least squares models might suffer from overfitting and high variance, and regularization can allow us to get to a more robust model.
 
-To begin with, we ran a cross validated ridge regression model on the price against the 35 explanatory variables. Figure <> showcases the top 10 features selected first by the ridge model. Notably, we see the following 10 features: 
+To begin with, we ran a cross validated ridge regression model on the price against the 35 explanatory variables. The figure below showcases the top 10 features selected first by the ridge model. 
 
 ```{r ridge-features, fig.cap = "Top features in ridge regression", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/ridge-features-plot.png")
@@ -184,7 +182,8 @@ Furthermore, we also implemented a cross validated lasso regression model. The m
 ```{r lasso-features-plot, fig.cap = "Top features in lasso regression", fig.align = "center", echo = FALSE, out.height = "80%", out.width = "80%"}
 knitr::include_graphics("../results/lasso-features-plot.png")
 ```
-Furthermore, from the lasso model, we extracted the coefficients to analyse the top 10 contributing parameters within the cross validated model that contributed to price. This was done by selecting the top 10 features based on the highest absolute coefficient values. These are demonstrated in Table <add table here>
+
+Furthermore, from the lasso model, we extracted the coefficients to analyse the top 10 contributing parameters within the cross validated model that contributed to price. This was done by selecting the top 10 features based on the highest absolute coefficient values. These are demonstrated in the table below. 
 
 ```{r lasso-coefficients, message = FALSE, echo = FALSE}
 read.csv("../results/top10_features.csv") %>%
@@ -196,6 +195,8 @@ read.csv("../results/top10_features.csv") %>%
   kable_styling(position = "center", latex_options = "hold_position")
 ```
 
+Based on the above table, we see the top 20 most contributing features within the lasso model. What is interesting is that the review score for value has a negative coefficient, which seems to be contradictory to what one might imagine considering that higher review scores should increase value. Among the other features, perhaps the most actionable one is review scores for cleanliness, which has a high positive coefficient indicating that cleanliness is important sometimes even more so than the location review. Another actionable feature here is the number of verifications.
+\newpage
 ## Tree-based methods
 
 ### Random forest
@@ -206,21 +207,23 @@ Beyond regression models, we further experimented with tree based methodologies.
 knitr::include_graphics("../results/rf-mtry-plot.png")
 ```
 
-We see above that the out of bag error is minimized when at 17 features for each split. We used this tuned value of the parameter to construct our final model. Based on this, we analysed the variable importance using both OOB and purity variable importance to better understand features that are strong predictors towards price. The results of this are demonstrated in Figure <>
+We see above that the out of bag error is minimized when at 17 features for each split. We used this tuned value of the parameter to construct our final model. Based on this, we analysed the variable importance using both OOB and purity variable importance to better understand features that are strong predictors towards price. The results of this are demonstrated in below
 
 ```{r var-imp-plot, fig.cap = "Random Forest Variable Importance", fig.align = "center", echo = FALSE, fig.height = 10, fig.width = 8}
 load("../results/rf_finalfit.Rda")
 varImpPlot(rf_finalfit)
 ```
-As we see above, <compare with the older models>
 
+From the variable importances, we see that based on the left metric, actionable features include number of listings by host, review scores for location and value, number of verifications by the host, along with more obvious ones such as number of accomodates, etc. Based on the metric on the right hand side, actionable features deemed important were number of listings by host, number of days hosting, and review scores for value and location.
+
+Looking at each of the above models, we definitely see some commonalities, and overall a few actionable features that were deemed important, most notably number of listings by host, review scores for parameters like cleanliness and location, number of verifications, and being a superhost.
 \newpage
 
 # Conclusions
 
 ## Method comparison
 
-Overall, we experimented with 4 distinct modelling methodologies, namely OLS, ridge regression, lasso regression, and random forests. To analyse each of them, we considered the root mean squared errors by analysing their predictions on the test dataset. In addition to the above variables, we further included an intercept only model, which predicts the average price from the training dataset for each listing, as a benchmark to better understand the predictive potential of our models. The results of this investigation are summarized in Table <>
+Overall, we experimented with 4 distinct modelling methodologies, namely OLS, ridge regression, lasso regression, and random forests. To analyse each of them, we considered the root mean squared errors by analysing their predictions on the test dataset. In addition to the above variables, we further included an intercept only model, which predicts the average price from the training dataset for each listing, as a benchmark to better understand the predictive potential of our models. The results of this investigation are summarized in the table below
 
 ```{r model-evaluation, message = FALSE, echo = FALSE}
 read.csv("../results/model-evaluation.csv") %>%
@@ -230,11 +233,19 @@ read.csv("../results/model-evaluation.csv") %>%
   kable_styling(position = "center", latex_options = "hold_position")
 ```
 
-As seen above, each of the models experimented with perform better than the intercept only model, indicating that there is some predictive potential for each. Clearly, the random forest model outperforms the others with an RMSE of ~ <...>. While considering that our mean price is ~ <>, we can see that our RMSE values are moderately high, for the purposes of our investigation our models nevertheless give us interesting insights on predictive factors towards optimal listing prices. 
+As seen above, each of the models experimented with perform better than the intercept only model which has an RMSE of ~137, indicating that there is some predictive potential for each. Clearly, the random forest model outperforms the others with an RMSE of ~ 77 as compared to the linear, ridge, and lasso models which have an RMSE of ~93. While considering that our mean price is ~190, we can see that our RMSE values are moderately high, for the purposes of our investigation our models nevertheless give us interesting insights on predictive factors towards optimal listing prices. 
 
 ## Takeaways
 
-<write this>
+Overall, pricing depends on a number of factors as seen within our models. Some of them are obvious including the number of accomodates, bedrooms, etc. however, we were able to determine a few actionable parameters that hosts should consider when pricing and those that they can optimise for.
+
+For instance, review scores for cleanliness seemed to be a parameter of importance. For this, hosts can not only focus on keeping the properties clean, but motivate guests to review them on this parameter and on other parameters such as location.
+
+Additionally, number of verifications was also a parameter of interest. For this, hosts should try and get verified on a higher number of sources such as email, etc. as this would likely grant them more credibility, potentially increasing the appeal of the listing to potential guests.
+
+Being a superhost was further deemed by the OLS model as a significant factor, and hosts should strive to achieve this status by improving level of hospitality for their guests while working with Airbnb.
+
+Ultimately, prices are influenced by a number of factors and hosts can not only use the above models created to determine what would be a suitable price for their property, but can also apply some of these principles to boost the value of their properties.
 
 ## Limitations
 

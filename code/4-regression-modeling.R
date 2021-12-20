@@ -78,5 +78,5 @@ beta_hat_std = extract_std_coefs(lasso_fit, listings_train)
 top_10_features = beta_hat_std %>% 
   filter(coefficient != 0) %>% 
   arrange(desc(abs(coefficient))) %>%
-  head(10)
+  head(20)
 write_csv(x = top_10_features, file = "results/top10_features.csv")

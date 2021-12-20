@@ -25,6 +25,7 @@ train_samples = sample(1:nrow(listings), 0.8*nrow(listings))
 
 train_samples
 listings_train = listings %>% filter(row_number() %in% train_samples)
+listings_train
 listings_test = listings %>% filter(!(row_number() %in% train_samples))
 ```
 ```{r}
@@ -44,7 +45,9 @@ dt_fit = rpart()
 
 
 ```{r}
-rf_fit = randomForest(price ~ ., data = listings_train)
+rf_fit = randomForest(price ~ ., data = listings_train, importance = TRUE)
+
+varImpPlot(rf_fit)
 ```
 
 ```{r}
