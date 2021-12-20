@@ -1,0 +1,11 @@
+price,host_response_time,host_response_rate,host_is_superhost
+893,within an hour,1,t
+893,within an hour,1,f
+865,within an hour,0.99,t
+861,within an hour,0.99,t
+846,within an hour,1,t
+825,within an hour,0.99,t
+766,within an hour,1,t
+755,within an hour,1,t
+734,within an hour,1,t
+727,within an hour,1,t
